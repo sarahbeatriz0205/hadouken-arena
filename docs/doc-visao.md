@@ -8,7 +8,7 @@
 
 ## 1. Visão Geral do Sistema Proposto
 
-O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento de campeonatos de Street Fighter II: The World Warrior, eliminando a digitação manual de placares e resultados. O jogo roda no emulador Snes9x, e um script Lua lê a memória e envia os eventos (vida, fim de round, fim de partida) ao servidor. O servidor atualiza a chave do campeonato e distribui as mudanças, em tempo real, aos clientes conectados. O projeto busca simplificar a vida do organizador e permitir que o público acompanhe cada luta enquanto ela acontece.
+O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento de campeonatos de Street Fighter II: The World Warrior, eliminando a digitação manual de placares e resultados. O jogo roda no emulador BizHawk, e um script Lua lê a memória (vida dos dois lutadores e timer) e repassa as leituras a um programa intermediário, que as converte em eventos (luta iniciada, vida atualizada e round encerrado) e os envia ao servidor por WebSocket. O servidor decide o vencedor de cada round, atualiza a chave do campeonato e distribui as mudanças, em tempo real, aos clientes conectados. O projeto busca simplificar a vida do organizador e permitir que o público acompanhe cada luta enquanto ela acontece.
 
 ## 2. Descrição do Problema
 
@@ -25,7 +25,7 @@ O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento d
 | :-: | :-: | :-: |
 | **Organizador** | Pessoa responsável pelo campeonato, que usa o painel do cliente | Criar o campeonato e cadastrar  jogadores antes de a chave ser gerada e iniciar as partidas. Também pode acompanhar a chave e os resultados. |
 | **Espectador** | Pessoa que acompanha o campeonato, sem necessidade de login | Visualizar a chave, os resultados e a partida em andamento. Não realiza nenhuma alteração no sistema. |
-| **Emulador** | Ator de sistema: o emulador com o script Lua que lê a memória do jogo | Enviar ao servidor os eventos da luta: luta iniciada, vida atualizada, round encerrado e partida encerrada. |
+| **Emulador** | Ator de sistema: o conjunto formado pelo emulador BizHawk, o script Lua que lê a memória do jogo e o programa intermediário que envia os eventos ao servidor | Enviar ao servidor os eventos da luta: luta iniciada, vida atualizada e round encerrado (com a vida final dos dois jogadores e o timer). |
 
 ## 4. Descrição do Ambiente dos Usuários
 
@@ -68,6 +68,7 @@ O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento d
 | RN15 | Partida sem Cancelamento | Não há operação para cancelar uma partida em Aguardando emulador ou Em andamento. Se ela travar, o campeonato fica bloqueado e a recuperação exige intervenção direta no banco de dados. |
 | RN16 | Encerramento do Campeonato | Quando a Final é finalizada, o campeonato passa para o estado Encerrado e nenhuma outra partida pode ser iniciada. |
 | RN17 | Visibilidade | A chave, os resultados e a partida em andamento podem ser consultados por qualquer espectador, sem login. |
+| RN18 | Vencedor do Round | Ao receber o fim de um round, o servidor decide o vencedor comparando a vida final dos dois jogadores: quem tem mais vida vence, seja por KO (um dos jogadores com vida zero) ou por tempo esgotado. Vidas iguais resultam em empate no round. O fim da partida também é decidido pelo servidor, quando um jogador atinge o número de rounds necessário. |
 
 ## 7. Requisitos Funcionais
 
@@ -77,8 +78,8 @@ O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento d
 | RF02 | Cadastro de jogador | Permitir que o organizador cadastre jogadores em um campeonato até ele lotar. | Alta |
 | RF03 | Geração da chave | Gerar automaticamente a chave, com sorteio dos confrontos, quando o último jogador é cadastrado. | Alta |
 | RF04 | Início de partida | Permitir que o organizador inicie uma partida da chave, colocando-a em Aguardando emulador. | Alta |
-| RF05 | Recebimento de eventos | Receber do emulador os eventos de luta iniciada, vida atualizada, round encerrado e partida encerrada. | Alta |
-| RF06 | Atualização de round e placar | Atualizar a vida do round a cada dano e somar os rounds ganhos de cada jogador quando um round termina. | Alta |
+| RF05 | Recebimento de eventos | Receber do emulador os eventos de luta iniciada, vida atualizada e round encerrado (com a vida final dos dois jogadores e o timer). | Alta |
+| RF06 | Atualização de round e placar | Atualizar a vida do round a cada dano e somar os rounds ganhos de cada jogador quando um round termina, decidindo o vencedor do round pela vida final dos dois jogadores. | Alta |
 | RF07 | Finalização e avanço | Finalizar a partida, registrar o vencedor e avançar o vencedor na chave. | Alta |
 | RF08 | Consulta da chave | Permitir que usuários consultem a chave e os resultados de um campeonato. | Alta |
 | RF09 | Consulta da partida ativa | Permitir que usuários consultem o estado atual da partida em andamento, inclusive ao conectar no meio da luta. | Alta |
@@ -94,7 +95,7 @@ O sistema tem como principal objetivo gerenciar e automatizar o acompanhamento d
 | RNF02 | Consistência | A finalização de uma partida e o avanço na chave devem ocorrer em uma única transação. O mesmo vale para o cadastro do último jogador e a geração da chave. | Confiabilidade | Obrigatório |
 | RNF03 | Gravar antes de Publicar | Nenhuma mudança deve ser publicada aos clientes antes de ser gravada no banco de dados. | Confiabilidade | Obrigatório |
 | RNF04 | Interoperabilidade | Servidor em Java (Jakarta XML Web Services) e cliente em C# (WCF em .NET 10) devem se comunicar por SOAP, a partir de um contrato WSDL/XSD compartilhado. | Restrição de projeto | Obrigatório |
-| RNF05 | Canal em Tempo Real | As atualizações em tempo real devem trafegar por WebSocket, estruturadas como envelopes SOAP. | Restrição de projeto | Obrigatório |
+| RNF05 | Canal em Tempo Real | As atualizações em tempo real devem trafegar por WebSocket, do programa intermediário ao servidor e do servidor aos clientes, estruturadas como envelopes SOAP. | Restrição de projeto | Obrigatório |
 | RNF06 | Persistência | Os dados do campeonato devem ser armazenados em SQLite. | Implementação | Obrigatório |
 | RNF07 | Recuperação de Estado | Um cliente que conecta no meio de uma partida deve obter o estado atual por consulta ao serviço e passar a receber as atualizações pelo WebSocket. | Confiabilidade | Desejável |
 | RNF08 | Mapeamento do Jogo | A leitura da memória do jogo deve ser feita para a versão específica da ROM utilizada. | Restrição de projeto | Obrigatório |
