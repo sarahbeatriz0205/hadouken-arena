@@ -2,11 +2,11 @@ package core.utils.grafo;
 
 public class Aresta {
     private boolean ehDirecionada;
-    private int valor; // coloquei int pensando que ele vai guardar uma distância, por exemplo
+    private Object valor;
     private Vertice verticeOrigem;
     private Vertice verticeDestino;
 
-    public Aresta(int valor, Vertice verticeOrigem, Vertice verticeDestino, boolean ehDirecionada) {
+    public Aresta(Object valor, Vertice verticeOrigem, Vertice verticeDestino, boolean ehDirecionada) {
         this.valor = valor; 
         this.verticeOrigem = verticeOrigem;
         this.verticeDestino = verticeDestino;
@@ -21,7 +21,7 @@ public class Aresta {
         return this.verticeDestino;
     }
 
-    public int getValor() {
+    public Object getValor() {
         return this.valor;
     }
 

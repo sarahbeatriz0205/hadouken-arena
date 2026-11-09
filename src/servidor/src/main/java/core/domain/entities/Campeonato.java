@@ -21,8 +21,11 @@ public class Campeonato {
         this.estado = EstadoCampeonato.CRIADO;
     }
 
-    public void inserirChaveamento() {
-        Chave chave = new Chave();
-        this.chaveamento = chave;
+    public void setChaveamento(Chave c) {
+        this.chaveamento = c;
+    }
+
+    public void setJogadores(Jogador j) {
+        this.jogadores.add(j);
     }
 }

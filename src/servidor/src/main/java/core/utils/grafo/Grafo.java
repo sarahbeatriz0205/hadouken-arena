@@ -61,7 +61,7 @@ public class Grafo {
     }
 
     // recebe logo se é direcionada ou não
-    public void inserirAresta(Vertice vertice1, Vertice vertice2, int valor, boolean ehDirecionada) {
+    public void inserirAresta(Vertice vertice1, Vertice vertice2, Object valor, boolean ehDirecionada) {
         Aresta novaAresta = new Aresta(valor, vertice1, vertice2, ehDirecionada);
         this.arestas.add(novaAresta);
         this.numArestas++;
