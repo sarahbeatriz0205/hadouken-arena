@@ -15,7 +15,7 @@
     </properties>
 
     <modules>
-        <module>src/intermediario</module>
-        <module>src/servidor</module>
+        <module>intermediario</module>
+        <module>servidor</module>
     </modules>
 </project>
