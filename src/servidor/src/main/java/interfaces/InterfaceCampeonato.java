@@ -7,7 +7,7 @@ import jakarta.jws.WebService;
 
 @WebService
 public interface InterfaceCampeonato {
-    @WebMethod Campeonato criarCampeonato(String nome, int qtdJogadores);
+    @WebMethod String criarCampeonato(String nome, int qtdJogadores);
     @WebMethod Chave inserirChaveamento(Campeonato campeonato);
-    @WebMethod Jogador inscreverJogador(Jogador jogador, Campeonato campeonato);
+    @WebMethod String inscreverJogador(String nomeJogador, int campeonatoId);
 }
