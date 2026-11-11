@@ -18,16 +18,7 @@ public class Partida {
         this.posicaoFase = posicaoFase;
     }
 
-    public void inserirVencedor(Jogador jogador) {
-        this.vencedor = jogador;
-    }
-
-    public void adicionarRodadaGanha() {
-        if (this.vencedor == this.jogadores[0]) {
-            this.roundsGanhosJogador1++;
-        }
-        else {
-            this.roundsGanhosJogador2++;
-        }
+    public String getEstado() {
+        return this.estado.toString();
     }
 }

@@ -8,7 +8,5 @@ client_campeonato = Client(wsdl=wsdl_campeonato)
 client_partida = Client(wsdl=wsdl_partida)
 client_chave = Client(wsdl=wsdl_chave)
 
-resultado = client_campeonato.service.criarCampeonato("Pistão", 4);
-print(resultado)
 outro_result = client_campeonato.service.inscreverJogador("Ryu", 1)
 print(outro_result)

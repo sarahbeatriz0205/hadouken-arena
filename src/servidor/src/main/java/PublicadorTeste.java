@@ -7,13 +7,5 @@ public class PublicadorTeste {
                 "http://127.0.0.1:9876/campeonato",
                 new CampeonatoService()
         );
-        Endpoint.publish(
-                "http://127.0.0.1:9876/partida",
-                new PartidaService()
-        );
-        Endpoint.publish(
-                "http://127.0.0.1:9876/chave",
-                new ChaveService()
-        );
     }
 }
