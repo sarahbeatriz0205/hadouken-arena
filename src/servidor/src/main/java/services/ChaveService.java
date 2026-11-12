@@ -90,4 +90,14 @@ public class ChaveService {
         }
         return "Quantidade de jogadores: " + jogadores.size() + " | " + "Quantidade de partidas criadas: " + partidasCriadas;
     }
+
+    // RF08 - Consulta da chave
+    public String[] exibirChaveamentoPorCampeonato(int campeonato_id) {
+        PartidaService partidaServ = new PartidaService();
+        String partidasPorCampeonato = partidaServ.buscarPartidasPorCampeonato(campeonato_id);
+
+        //nao sei se é suficiente. tem que testar
+        String[] listaDePartidas = partidasPorCampeonato.split("\n");
+        return listaDePartidas;
+    }
 }

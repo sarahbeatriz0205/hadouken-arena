@@ -1,7 +1,9 @@
 package db;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -68,7 +70,7 @@ public class Database {
                 s.execute(sqlTabelaPartida);
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao criar tabelas: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -77,22 +79,23 @@ public class Database {
              Statement stmt = conn.createStatement()) {
             stmt.execute(comando);
         } catch (SQLException e) {
-            System.out.println("Erro ao executar comando: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
     public static String executarQuery(String comando) {
+        String resultados = ""; // gambiarra pra nao afetar o restante dos metodos que usam esse metodo
         try (Connection conn = conectar();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(comando)) {
 
-            if (rs.next()) {
-                return rs.getString(1);
+            while (rs.next()) {
+                resultados += rs.getString(1) + "\n";
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao executar query: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
-        return null;
+        return resultados;
     }
 
     public static void main(String[] args) {
