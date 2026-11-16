@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadouken Arena - Detalhes da Partida</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<header>
+    <h1>Hadouken Arena</h1>
+</header>
+
+<div class="container-box">
+    <a id="btn-voltar" href="detalhamento.html"><button type="button">&larr; Voltar ao Campeonato</button></a>
+</div>
+
+<div class="container-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 id="partida-titulo" class="section-title" style="margin-bottom: 4px;">Partida #--</h2>
+            <span id="partida-fase">Fase: -- • Posição: --</span>
+        </div>
+        <span id="partida-estado" class="badge badge-open">AGUARDANDO</span>
+    </div>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 180px;">
+            <label for="vida-j1" id="label-vida-j1" style="display: block; margin-bottom: 5px;">Vida Restante - Jogador 1</label>
+            <input type="number" id="vida-j1" min="0" max="100" value="100" required style="width: 100%;">
+        </div>
+
+        <div style="flex: 1; min-width: 180px;">
+            <label for="vida-j2" id="label-vida-j2" style="display: block; margin-bottom: 5px;">Vida Restante - Jogador 2</label>
+            <input type="number" id="vida-j2" min="0" max="100" value="100" required style="width: 100%;">
+        </div>
+
+        <div style="flex: 1; min-width: 140px;">
+            <label for="timer-round" style="display: block; margin-bottom: 5px;">Timer (segundos)</label>
+            <input type="number" id="timer-round" min="0" max="99" value="99" required style="width: 100%;">
+        </div>
+    </div>
+
+    <h3>Placar de Rounds</h3>
+    <div style="display: flex; justify-content: space-around; align-items: center; text-align: center; margin: 20px 0;">
+        <div>
+            <h4 id="j1-nome" style="margin-bottom: 8px;">Jogador 1</h4>
+            <span id="j1-rounds" style="font-size: 2rem; font-weight: bold;">0</span>
+            <p style="font-size: 0.85rem; opacity: 0.8;">Rounds Ganhos</p>
+        </div>
+
+        <div style="font-size: 1.5rem; font-weight: bold;">VS</div>
+
+        <div>
+            <h4 id="j2-nome" style="margin-bottom: 8px;">Jogador 2</h4>
+            <span id="j2-rounds" style="font-size: 2rem; font-weight: bold;">0</span>
+            <p style="font-size: 0.85rem; opacity: 0.8;">Rounds Ganhos</p>
+        </div>
+    </div>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+
+    <div id="box-vencedor" style="display: none; margin-top: 20px; padding: 12px; border: 1px

@@ -5,4 +5,5 @@ import jakarta.jws.WebService;
 @WebService 
 public interface InterfacePartida {
     @WebMethod String iniciarPartidaLocal(int partidaId);
+    @WebMethod String buscarPartidaPorId(int partidaId);
 }

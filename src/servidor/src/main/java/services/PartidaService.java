@@ -3,8 +3,11 @@ import core.domain.entities.Jogador;
 import core.domain.entities.Partida;
 import core.domain.entities.enums.Fase;
 import db.Database;
+import interfaces.InterfacePartida;
+import jakarta.jws.WebService;
 
-public class PartidaService {
+@WebService(endpointInterface = "interfaces.InterfacePartida")
+public class PartidaService implements InterfacePartida {
     public Partida criarPartida(Jogador[] jogadores, Fase fase, int posicaoFase) {
         return new Partida(jogadores, fase, posicaoFase);
     }
@@ -30,8 +33,13 @@ public class PartidaService {
     public String buscarPartidasPorCampeonato(int campeonato_id) {
         String sqlBuscarPartidas =
                 """
-                SELECT p.jogador_id1 || ' | ' || p.jogador_id2 || ' | ' || p.vencedor_id || ' | ' || p.fase || ' | ' || p.estado || ' | ' || p.posicao || ' | ' || p.rounds_jogador2 || ' | ' || p.rounds_jogador1
-                FROM partida p WHERE p.campeonato_id = %d;
+                SELECT COALESCE(j1.nome, 'A definir') || ' | ' ||
+                                                  COALESCE(j2.nome, 'A definir') || ' | ' ||
+                                                  COALESCE(jv.nome, 'A definir') || ' | ' || p.fase || ' | ' || p.estado || ' | ' || p.posicao || ' | ' || COALESCE(p.rounds_jogador2, 0) || ' | ' || COALESCE(p.rounds_jogador1, 0)
+                FROM partida p LEFT JOIN jogador j1 ON p.jogador_id1 = j1.id
+                                               LEFT JOIN jogador j2 ON p.jogador_id2 = j2.id
+                                               LEFT JOIN jogador jv ON p.vencedor_id = jv.id
+                                               WHERE p.campeonato_id = %d;
                 """.formatted(campeonato_id);
         String result = Database.executarQuery(sqlBuscarPartidas);
         return result;
@@ -40,9 +48,23 @@ public class PartidaService {
     public String buscarPartidaPorId(int partidaId) {
         String sqlPartidaBuscada = 
                 """
-                SELECT 1 FROM partida p WHERE p.id = %d; 
+                                    SELECT p.id || ' | ' ||
+                                           COALESCE(j1.nome, 'A definir') || ' | ' ||
+                                           COALESCE(j2.nome, 'A definir') || ' | ' ||
+                                           COALESCE(jv.nome, 'A definir') || ' | ' ||
+                                           p.fase || ' | ' ||
+                                           p.estado || ' | ' ||
+                                           p.posicao || ' | ' ||
+                                           COALESCE(p.rounds_jogador1, 0) || ' | ' ||
+                                           COALESCE(p.rounds_jogador2, 0) || ' | ' ||
+                                           p.campeonato_id
+                                    FROM partida p
+                                    LEFT JOIN jogador j1 ON p.jogador_id1 = j1.id
+                                    LEFT JOIN jogador j2 ON p.jogador_id2 = j2.id
+                                    LEFT JOIN jogador jv ON p.vencedor_id = jv.id
+                                    WHERE p.id = %d;
                 """.formatted(partidaId);
-        String result = Database.executarQuery(sqlPartidaBuscada);
+        String result = Database.executarQuery(sqlPartidaBuscada).trim();
         return result;
     }
 }

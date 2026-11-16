@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadouken Arena - Detalhes do Campeonato</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<header>
+    <h1>Hadouken Arena</h1>
+</header>
+
+<div class="container-box">
+    <a href="index.html"><button type="button">&larr; Voltar</button></a>
+</div>
+
+<div class="container-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 id="camp-nome" class="section-title" style="margin-bottom: 4px;"></h2>
+            <span id="camp-info">0 / 0 Jogadores • Criado em --/--/----</span>
+        </div>
+        <span id="camp-estado" class="badge badge-open">CRIADO</span>
+    </div>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+
+    <h3>Inscrever Jogador</h3>
+    <form id="form-inscrever" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="nome-jogador" placeholder="Nome do jogador" required>
+        <button type="button" id="btn-inscrever">Inscrever</button>
+    </form>
+
+    <h3>Jogadores Inscritos</h3>
+    <ul id="lista-jogadores" class="tournament-list">
+        <li>Nenhum jogador inscrito ainda.</li>
+    </ul>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Chaveamento / Partidas</h3>
+        <button type="button" id="btn-iniciar-camp">Gerar Chaves e Iniciar</button>
+    </div>
+    <div id="lista-partidas" class="tournament-list" style="margin-top: 12px;">
+        <p>As partidas aparecerão aqui após o início do campeonato.</p>
+    </div>
+</div>
+
+<script src="scripts/detalhamento.js"></script>
+</body>
+</html>

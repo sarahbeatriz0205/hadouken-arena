@@ -4,19 +4,20 @@ import interfaces.InterfaceCampeonato;
 import core.domain.entities.*;
 import jakarta.jws.WebService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebService(endpointInterface = "interfaces.InterfaceCampeonato")
 public class CampeonatoService implements InterfaceCampeonato {
-    public String criarCampeonato(String nome, int qtdJogadores) {
+    public Campeonato criarCampeonato(String nome, int qtdJogadores) {
         Campeonato c = new Campeonato(nome, qtdJogadores);
         String sqlInserirCampeonato =
-                """
-                INSERT INTO campeonato (nome, qtdJogadores, dataCriacao, estado) 
-                VALUES ('%s', %s, '%s', '%s');
-                """.formatted(c.getNome(), c.getQtdJogadores(), c.getDataCriacao(), c.getEstado());
+                    """
+                    INSERT INTO campeonato (nome, qtdJogadores, dataCriacao, estado) 
+                    VALUES ('%s', %d, '%s', '%s');
+                    """.formatted(c.getNome(), c.getQtdJogadores(), c.getDataCriacao(), c.getEstado());
         Database.executarComando(sqlInserirCampeonato);
-        return c.getNome();
+        return c;
     }
 
     public String inscreverJogador(String nomeJogador, int campeonatoId) {
@@ -44,7 +45,7 @@ public class CampeonatoService implements InterfaceCampeonato {
                 """
                 SELECT c.qtdJogadores from campeonato c WHERE c.id = %d;
                 """.formatted(campeonatoId);
-        String result = Database.executarQuery(sqlVerificarCampeonato);
+        String result = Database.executarQuery(sqlVerificarCampeonato).trim();
 
         String sqlVerificarJogadores =
                 """
@@ -80,8 +81,7 @@ public class CampeonatoService implements InterfaceCampeonato {
     }
 
     public String detalharCampeonato(int campeonatoId) {
-        String busca = getCampeonatoPorId(campeonatoId);
-        return busca;
+        return getCampeonatoPorId(campeonatoId);
     }
 
     public int getCampeonatoPorNome(String nome) {
@@ -89,7 +89,7 @@ public class CampeonatoService implements InterfaceCampeonato {
                 """
                 SELECT c.id from campeonato c WHERE c.nome = '%s';
                 """.formatted(nome);
-        String result = Database.executarQuery(sqlBuscarCamp);
+        String result = Database.executarQuery(sqlBuscarCamp).trim();
         int campeonatoId = Integer.parseInt(result);
         return campeonatoId;
     }
@@ -97,10 +97,20 @@ public class CampeonatoService implements InterfaceCampeonato {
     public String getCampeonatoPorId(int id) {
         String sqlBuscarCamp =
                 """
-                SELECT c.nome || ' | ' || c.dataCriacao || ' | ' || c.estado || ' | ' || c.qtdJogadores 
-                FROM campeonato c WHERE c.id = %d;
+                SELECT c.id || ' | ' || c.nome || ' | ' || c.dataCriacao || ' | ' || c.estado || ' | ' || c.qtdJogadores 
+                FROM campeonato c WHERE c.id = %d LIMIT 1;
                 """.formatted(id);
-        String result = Database.executarQuery(sqlBuscarCamp);
+        String result = Database.executarQuery(sqlBuscarCamp).trim();
         return result;
+    }
+
+    public String[] listarJogadoresPorCampeonato(int campeonatoId) {
+        String sqlBuscarJog =
+                """
+                SELECT nome FROM jogador WHERE campeonato_id = %d;
+                """.formatted(campeonatoId);
+
+        String result = Database.executarQuery(sqlBuscarJog).trim();
+        return result.split("\\R");
     }
 }

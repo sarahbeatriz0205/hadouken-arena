@@ -77,9 +77,10 @@ public class Database {
     public static void executarComando(String comando) {
         try (Connection conn = conectar();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(comando);
+            int linhas = stmt.executeUpdate(comando);
+            System.out.println("SUCESSO! Linhas afetadas no banco: " + linhas);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("ERRO SQL DETECTADO: " + e.getMessage());
         }
     }
 
@@ -90,7 +91,10 @@ public class Database {
              ResultSet rs = stmt.executeQuery(comando)) {
 
             while (rs.next()) {
-                resultados += rs.getString(1) + "\n";
+                String val = rs.getString(1);
+                if (val != null) {
+                    resultados += val + "\n";
+                }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

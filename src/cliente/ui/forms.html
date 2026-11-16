@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadouken Arena - Gerenciar Campeonatos</title>
+    <link rel="stylesheet" href="css/forms.css">
+</head>
+<body>
+
+<header>
+    <h1>Hadouken Arena</h1>
+</header>
+
+<div class="container-box">
+    <h2 class="section-title">Criar Novo Campeonato</h2>
+    <form class="form-row">
+        <input id="nome-camp" type="text" name="nome" placeholder="Nome do Campeonato" required>
+
+        <select id="qtd-jog" name="qtdJogadores" required>
+            <option value="" disabled selected>Quantidade de jogadores</option>
+            <option value="4">4 Jogadores</option>
+            <option value="8">8 Jogadores</option>
+        </select>
+
+        <button type="submit" id="btn-criar-camp">Criar</button>
+    </form>
+</div>
+<script src="scripts/forms.js"></script>
+</body>
+</html>

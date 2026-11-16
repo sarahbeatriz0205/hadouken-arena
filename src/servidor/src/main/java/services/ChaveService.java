@@ -3,10 +3,13 @@ import core.domain.entities.*;
 import core.domain.entities.enums.Fase;
 import core.utils.grafo.Vertice;
 import db.Database;
+import interfaces.InterfaceChave;
+import jakarta.jws.WebService;
 
 import java.util.ArrayList;
 
-public class ChaveService {
+@WebService(endpointInterface = "interfaces.InterfaceChave")
+public class ChaveService implements InterfaceChave {
     public String criarChave(ArrayList<Jogador> jogadores, int campeonato_id) {
         Chave chaveamento = new Chave();
         PartidaService servico = new PartidaService();
@@ -23,21 +26,20 @@ public class ChaveService {
             Vertice vInicio = chaveamento.getChaveamento().vertices().getLast();
             partidasFaseAtual.add(vInicio);
 
-            String sqlVerificaJogador =
-                    """
-                    SELECT GROUP_CONCAT(j.id) FROM jogador j WHERE j.nome IN ('%s', '%s') AND j.campeonato_id = %d;
-                    """.formatted(jogadoresAtuais[0].getNome(), jogadoresAtuais[1].getNome(), campeonato_id);
+            String sqlJ1 = "SELECT id FROM jogador WHERE nome = '%s' AND campeonato_id = %d LIMIT 1;"
+                    .formatted(jogadoresAtuais[0].getNome(), campeonato_id);
+            String sqlJ2 = "SELECT id FROM jogador WHERE nome = '%s' AND campeonato_id = %d LIMIT 1;"
+                    .formatted(jogadoresAtuais[1].getNome(), campeonato_id);
 
-            String result = Database.executarQuery(sqlVerificaJogador);
+            String res1 = Database.executarQuery(sqlJ1).trim();
+            String res2 = Database.executarQuery(sqlJ2).trim();
 
-            int idJogador1 = 0;
-            int idJogador2 = 0;
-
-            if (result != null && !result.trim().isEmpty()) {
-                String[] partes = result.split(",");
-                if (partes.length > 0) idJogador1 = Integer.parseInt(partes[0].trim());
-                if (partes.length > 1) idJogador2 = Integer.parseInt(partes[1].trim());
+            if (res1.isEmpty() || res2.isEmpty()) {
+                throw new RuntimeException("Erro: Um ou mais jogadores não foram encontrados no banco para o campeonato " + campeonato_id);
             }
+
+            int idJogador1 = Integer.parseInt(res1);
+            int idJogador2 = Integer.parseInt(res2);
 
             String sqlInserirPartida =
                     """
@@ -59,7 +61,7 @@ public class ChaveService {
 
         int qtdProximasPartidas = qtdPartidasIniciais / 2;
         posicao = 1;
-        while (qtdProximasPartidas > 1) {
+        while (qtdProximasPartidas >= 1) {
             Fase proximaFase = Fase.descobrirFase(qtdProximasPartidas);
             ArrayList<Vertice> proximasPartidas = new ArrayList<Vertice>();
 
@@ -79,7 +81,7 @@ public class ChaveService {
                         """
                         INSERT INTO partida (jogador_id1, jogador_id2, campeonato_id, fase, estado, posicao) 
                         VALUES (NULL, NULL, %d, '%s', '%s', %d);
-                        """.formatted(campeonato_id, faseAtual.name(), partidaFutura.getEstado(), posicao);
+                        """.formatted(campeonato_id, proximaFase.name(), partidaFutura.getEstado(), posicao);
                 Database.executarComando(sqlInserirPartida);
                 posicao++;
                 partidasCriadas++;
