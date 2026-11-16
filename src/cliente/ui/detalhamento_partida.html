@@ -13,16 +13,16 @@
 </header>
 
 <div class="container-box">
-    <a id="btn-voltar" href="detalhamento.html"><button type="button">&larr; Voltar ao Campeonato</button></a>
+    <a id="btn-voltar" href="detalhamento_campeonato.html">&larr; Voltar</a>
 </div>
 
 <div class="container-box">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h2 id="partida-titulo" class="section-title" style="margin-bottom: 4px;">Partida #--</h2>
-            <span id="partida-fase">Fase: -- • Posição: --</span>
+            <h2 id="partida-titulo" class="section-title" style="margin-bottom: 4px;"></h2>
+            <span id="partida-fase"></span>
         </div>
-        <span id="partida-estado" class="badge badge-open">AGUARDANDO</span>
+        <span id="partida-estado" class="badge badge-open"></span>
     </div>
 
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
@@ -30,16 +30,16 @@
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 180px;">
             <label for="vida-j1" id="label-vida-j1" style="display: block; margin-bottom: 5px;">Vida Restante - Jogador 1</label>
-            <input type="number" id="vida-j1" min="0" max="100" value="100" required style="width: 100%;">
+            <input type="number" id="vida-j1" min="0" max="176" value="176" required style="width: 100%;">
         </div>
 
         <div style="flex: 1; min-width: 180px;">
             <label for="vida-j2" id="label-vida-j2" style="display: block; margin-bottom: 5px;">Vida Restante - Jogador 2</label>
-            <input type="number" id="vida-j2" min="0" max="100" value="100" required style="width: 100%;">
+            <input type="number" id="vida-j2" min="0" max="176" value="176" required style="width: 100%;">
         </div>
 
         <div style="flex: 1; min-width: 140px;">
-            <label for="timer-round" style="display: block; margin-bottom: 5px;">Timer (segundos)</label>
+            <label for="timer-round" style="display: block; margin-bottom: 5px;">Timer</label>
             <input type="number" id="timer-round" min="0" max="99" value="99" required style="width: 100%;">
         </div>
     </div>
@@ -63,4 +63,16 @@
 
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
 
-    <div id="box-vencedor" style="display: none; margin-top: 20px; padding: 12px; border: 1px
+    <div id="box-vencedor" style="display: none; margin-top: 20px; padding: 12px; border: 1px solid #4caf50; background-color: rgba(76, 175, 80, 0.1); border-radius: 6px; text-align: center;">
+        <h3 style="margin: 0 0 6px 0; color: #4caf50;">Vencedor da Partida</h3>
+        <p id="texto-vencedor" style="font-size: 1.2rem; font-weight: bold; margin: 0;"></p>
+    </div>
+
+    <div id="controles-partida" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px;">
+        <button type="button" id="btn-iniciar-partida">Iniciar Partida</button>
+    </div>
+</div>
+
+<script src="scripts/detalhamento_partida.js"></script>
+</body>
+</html>

@@ -182,11 +182,14 @@ function carregarChaveamento() {
                 return;
             }
 
+            const params = new URLSearchParams(window.location.search);
+            const nomeCampAtual = params.get("nome");
+
             Array.from(tagsReturn).forEach(tag => {
                 const textoBruto = tag.textContent.trim();
                 if (!textoBruto) return;
 
-                const [jog1, jog2, fase, estado] = textoBruto.split(" | ");
+                const [id, jog1, jog2, fase, estado] = textoBruto.split(" | ");
 
                 const nome1 = (!jog1 || jog1 === "null") ? "A definir" : jog1;
                 const nome2 = (!jog2 || jog2 === "null") ? "A definir" : jog2;
@@ -201,8 +204,12 @@ function carregarChaveamento() {
         </div>
         <button type="button" class="btn-acompanhar">Acompanhar</button>
     `;
-
+                const btnAcompanhar = novaDiv.querySelector(".btn-acompanhar");
+                btnAcompanhar.addEventListener("click", () => {
+                    window.location.href = `detalhamento_partida.html?id=${id}&camp=${encodeURIComponent(nomeCampAtual)}`;
+                });
                 partidasContainer.appendChild(novaDiv);
             });
+            document.getElementById("btn-voltar").href = `detalhamento_partida.html?id=${campeonatoId}`;
         });
 }

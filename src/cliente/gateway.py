@@ -80,6 +80,13 @@ class Gateway(BaseHTTPRequestHandler):
             retorno = client_partida.service.buscarPartidaPorId(partida_id)
 
             xml_resposta= f"<resposta><return>{retorno}</return></resposta>"
+        elif raiz.find(".//{*}iniciarPartidaLocal") is not None:
+            partida_id = int(raiz.find(".//{*}arg0").text)
+            retorno = client_partida.service.iniciarPartidaLocal(partida_id)
+
+            xml_resposta= f"<resposta><return>{retorno}</return></resposta>"
+        else:
+            return "Nenhuma op achada"
 
 
         self.send_response(200)

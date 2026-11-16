@@ -15,25 +15,23 @@ public class PartidaService implements InterfacePartida {
     // RF04 - Início de partida
     public String iniciarPartidaLocal(int partidaId) {
         String partida = buscarPartidaPorId(partidaId);
-        String[] particaoPartida = partida.split(",");
-        String estado = particaoPartida[6]; // posicao possivel do estado
-        String sqlAlterarEstadoPartida = 
+        String[] particaoPartida = partida.split(" \\| ");
+        String sqlAlterarEstadoPartida =
                 """
-                UPDATE partida p SET p.estado='%s' WHERE p.id = %d;
+                UPDATE partida SET estado='%s' WHERE id = %d;
                 """.formatted("AGUARDANDO_EMULADOR", partidaId);
         Database.executarComando(sqlAlterarEstadoPartida);
 
         // gambiarra pra saber se o estado ta mudando no banco
         partida = buscarPartidaPorId(partidaId);
-        String[] particaoPartidaAtualizada = partida.split(",");
-        String estadoNovo = particaoPartidaAtualizada[6];
-        return "Estado velho: " + estado + " | " + "Estado novo: " + estadoNovo;
+        String[] particaoPartidaAtualizada = partida.split(" \\| ");
+        return particaoPartidaAtualizada[5].trim();
     }
 
     public String buscarPartidasPorCampeonato(int campeonato_id) {
         String sqlBuscarPartidas =
                 """
-                SELECT COALESCE(j1.nome, 'A definir') || ' | ' ||
+                SELECT p.id || ' | ' || COALESCE(j1.nome, 'A definir') || ' | ' ||
                                                   COALESCE(j2.nome, 'A definir') || ' | ' ||
                                                   COALESCE(jv.nome, 'A definir') || ' | ' || p.fase || ' | ' || p.estado || ' | ' || p.posicao || ' | ' || COALESCE(p.rounds_jogador2, 0) || ' | ' || COALESCE(p.rounds_jogador1, 0)
                 FROM partida p LEFT JOIN jogador j1 ON p.jogador_id1 = j1.id
