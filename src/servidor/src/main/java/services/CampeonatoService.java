@@ -3,8 +3,6 @@ import db.Database;
 import interfaces.InterfaceCampeonato;
 import core.domain.entities.*;
 import jakarta.jws.WebService;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebService(endpointInterface = "interfaces.InterfaceCampeonato")

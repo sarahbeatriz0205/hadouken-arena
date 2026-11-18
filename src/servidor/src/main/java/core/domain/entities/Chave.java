@@ -1,5 +1,4 @@
 package core.domain.entities;
-import java.util.ArrayList;
 import core.utils.grafo.Grafo;
 
 public class Chave {

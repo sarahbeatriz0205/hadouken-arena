@@ -8,7 +8,6 @@ import jakarta.json.JsonReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.tyrus.server.Server;
-
 import core.DadosPartida;
 
 @ServerEndpoint("/transmissao")
@@ -32,8 +31,6 @@ public class ServidorWebsocket {
 
         @OnMessage 
         public void mensagem(String msgJson, Session sessao) {
-            System.out.println("Mudança detectada!");
-
             try (JsonReader jr = Json.createReader(new StringReader(msgJson))) {
             JsonObject jo = jr.readObject();
             String acao = jo.getString("acao", "");

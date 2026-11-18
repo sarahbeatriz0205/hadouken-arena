@@ -1,7 +1,5 @@
 package interfaces;
 import core.domain.entities.Campeonato;
-import core.domain.entities.Chave;
-import core.domain.entities.Jogador;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
 
