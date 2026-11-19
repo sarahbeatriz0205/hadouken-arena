@@ -3,8 +3,13 @@
 Projeto acadêmico desenvolvido na disciplina de **Desenvolvimento de Sistemas Distribuídos**, do curso de **Análise e Desenvolvimento de Sistemas (IFRN)** com o objetivo de gerenciar e automatizar o acompanhamento de campeonatos de **Street Fighter II: The World Warrior (SNES)**, eliminando a digitação manual de placares e resultados através da integração direta de um emulador com uma aplicação distribuída em tempo real utilizando WebSocket e protocolo SOAP para operações síncronas.
 
 ## O que contém no projeto
-- Cliente Python 
-
+- Cliente web com HTML e Javascript que envia as requisições com o corpo do envelope SOAP via _fetch_ para o gateway Python
+- Gateway Python que age como cliente consumidor do serviço SOAP utilizando a biblioteca ```zeep``` e como servidor HTTP com a biblioteca ```http.server```
+- Servidor que expõe serviços SOAP em Java utilizando a biblioteca ```Jakarta JWS Web Services```
+- Servidor WebSocket em Java utilizando ```Jakarta WebSocket``` com servidor ```Tyrus```
+- Script em Lua que captura as informações do emulador BizHawk
+- Listener que escuta o emulador e repassa as informações para o servidor WebSocket
+ 
 ##  Estrutura de pastas
 ```text
 HADOUKEN-ARENA/
